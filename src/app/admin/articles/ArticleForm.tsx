@@ -1,0 +1,94 @@
+import { Article, Category } from "@/lib/types";
+
+export default function ArticleForm({
+  action,
+  article,
+  categories,
+  slugEditable = true,
+}: {
+  action: (formData: FormData) => void;
+  article?: Article;
+  categories: Category[];
+  slugEditable?: boolean;
+}) {
+  return (
+    <form action={action} className="flex flex-col gap-5">
+      <Field label="Slug (URL, ex. mon-titre-darticle)">
+        <input
+          name="slug"
+          defaultValue={article?.slug}
+          required
+          disabled={!slugEditable}
+          className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm disabled:opacity-50 focus:border-gold"
+        />
+      </Field>
+
+      <Field label="Titre">
+        <input name="title" defaultValue={article?.title} required className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold" />
+      </Field>
+
+      <Field label="Sous-titre">
+        <input name="subtitle" defaultValue={article?.subtitle} required className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold" />
+      </Field>
+
+      <div className="grid gap-5 sm:grid-cols-2">
+        <Field label="Catégorie">
+          <select name="category" defaultValue={article?.category} required className="w-full border border-white/20 bg-ink px-3 py-2 text-sm focus:border-gold">
+            {categories.map((c) => (
+              <option key={c.slug} value={c.slug}>{c.label}</option>
+            ))}
+          </select>
+        </Field>
+        <Field label="Auteur">
+          <input name="author" defaultValue={article?.author ?? "Ateukeng Brice"} required className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold" />
+        </Field>
+      </div>
+
+      <div className="grid gap-5 sm:grid-cols-2">
+        <Field label="Date de publication">
+          <input type="date" name="published_at" defaultValue={article?.published_at} required className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold" />
+        </Field>
+        <Field label="Temps de lecture (minutes)">
+          <input type="number" min={1} name="reading_minutes" defaultValue={article?.reading_minutes ?? 4} required className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold" />
+        </Field>
+      </div>
+
+      <Field label="Note de couverture (description de l'image, pas de fichier en V1)">
+        <input name="cover_note" defaultValue={article?.cover_note} required className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold" />
+      </Field>
+
+      <Field label="Extrait (affiché dans les listes)">
+        <textarea name="excerpt" defaultValue={article?.excerpt} required rows={2} className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold" />
+      </Field>
+
+      <Field label="Corps de l'article — un paragraphe par bloc, séparés par une ligne vide">
+        <textarea
+          name="body"
+          defaultValue={article?.body.join("\n\n")}
+          required
+          rows={12}
+          className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm leading-relaxed focus:border-gold"
+        />
+      </Field>
+
+      <Field label="Articles associés (slugs séparés par des virgules, optionnel)">
+        <input name="related" defaultValue={article?.related?.join(", ")} className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold" />
+      </Field>
+
+      <div className="mt-2 flex items-center gap-4">
+        <button type="submit" className="border border-gold bg-gold px-6 py-2.5 text-sm font-medium text-ink hover:bg-transparent hover:text-gold">
+          {article ? "Enregistrer" : "Publier l'article"}
+        </button>
+      </div>
+    </form>
+  );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="block">
+      <span className="text-xs text-paper/50">{label}</span>
+      <div className="mt-1">{children}</div>
+    </label>
+  );
+}
