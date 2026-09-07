@@ -1,87 +1,18 @@
 @import "tailwindcss";
 
-:root {
-  --ink: #0b0b0c;       /* noir profond */
-  --paper: #f6f3ec;     /* blanc cassé */
-  --iron: #2c2c30;      /* gris anthracite */
-  --gold: #b08d57;      /* doré discret */
-  --gold-soft: #d9c39a; /* doré clair */
-  --line: rgba(246, 243, 236, 0.12);
-  --line-strong: rgba(246, 243, 236, 0.22);
-}
-
-/*
- * Typographie de marque (section 4 du cahier des charges) : Fraunces pour
- * le display (caractère, intellectuel), Inter pour le corps (extrêmement
- * lisible), IBM Plex Mono pour les eyebrows/labels/numérotation des axes.
- * Auto-hébergées via @fontsource (aucune requête vers fonts.googleapis.com
- * au build ni au runtime — fiable partout, y compris en environnement
- * réseau restreint).
- */
-:root {
-  --font-fraunces: "Fraunces", Georgia, "Iowan Old Style", serif;
-  --font-inter: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-plex-mono: "IBM Plex Mono", "SFMono-Regular", Menlo, Consolas, monospace;
-}
-
-@theme inline {
-  --color-ink: var(--ink);
-  --color-paper: var(--paper);
-  --color-iron: var(--iron);
-  --color-gold: var(--gold);
-  --color-gold-soft: var(--gold-soft);
-  --font-display: var(--font-fraunces);
-  --font-body: var(--font-inter);
-  --font-mono: var(--font-plex-mono);
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  background: var(--ink);
-  color: var(--paper);
-  font-family: var(--font-body);
-}
-
-::selection {
-  background: var(--gold);
-  color: var(--ink);
-}
-
-.eyebrow {
-  font-family: var(--font-mono);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-size: 0.72rem;
-  color: var(--gold);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-:focus-visible {
-  outline: 1px solid var(--gold);
-  outline-offset: 3px;
-}
-
-@keyframes compass-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.compass-ring {
-  animation: compass-spin 120s linear infinite;
-  transform-origin: 50% 50%;
-}
+:root { --ink: #0b0b0c; --paper: #f6f3ec; --iron: #2c2c30; --gold: #b08d57; --gold-soft: #d9c39a; --line: rgba(246,243,236,.13); --line-strong: rgba(246,243,236,.26); --font-fraunces: "Fraunces", Georgia, serif; --font-inter: "Inter", sans-serif; --font-plex-mono: "IBM Plex Mono", monospace; }
+@theme inline { --color-ink: var(--ink); --color-paper: var(--paper); --color-iron: var(--iron); --color-gold: var(--gold); --color-gold-soft: var(--gold-soft); --color-line: var(--line); --font-display: var(--font-fraunces); --font-sans: var(--font-inter); --font-mono: var(--font-plex-mono); }
+html { scroll-behavior: smooth; background: var(--ink); }
+body { background: var(--ink); color: var(--paper); font-family: var(--font-inter); }
+::selection { background: var(--gold); color: var(--ink); }
+.eyebrow { color: var(--gold); font-family: var(--font-plex-mono); font-size: .68rem; letter-spacing: .18em; text-transform: uppercase; }
+.section-title { max-width: 48rem; font-family: var(--font-fraunces); font-size: clamp(2.5rem, 5vw, 5rem); letter-spacing: -.045em; line-height: .98; text-wrap: balance; }
+.button-primary, .button-dark, .button-quiet { display: inline-flex; align-items: center; justify-content: center; gap: .75rem; padding: .85rem 1.1rem; font-size: .78rem; transition: background-color .25s, color .25s, border-color .25s; }
+.button-primary { background: var(--gold); color: var(--ink); }
+.button-primary:hover { background: var(--gold-soft); }
+.button-dark { border: 1px solid var(--ink); color: var(--ink); }
+.button-dark:hover { background: var(--ink); color: var(--paper); }
+.button-quiet { border: 1px solid var(--line-strong); color: rgba(246,243,236,.75); }
+.button-quiet:hover { border-color: var(--gold); color: var(--gold); }
+:focus-visible { outline: 1px solid var(--gold); outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .001ms !important; } }

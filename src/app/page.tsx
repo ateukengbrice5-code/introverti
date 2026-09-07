@@ -1,217 +1,73 @@
 import Link from "next/link";
-import Compass from "@/components/Compass";
 import Newsletter from "@/components/Newsletter";
-import { getThemes } from "@/lib/data/themes";
-import { getAxes } from "@/lib/data/axes";
 import { getArticles } from "@/lib/data/articles";
 
-const problemPhrases = [
-  "« Tu ne parles jamais. »",
-  "« Tu devrais être plus sociable. »",
-  "« Tu manques de confiance. »",
-  "« Il faut sortir de ta zone de confort. »",
+const journey = [
+  ["01", "Comprendre", "Découvrir ta personnalité, tes mécanismes et tes forces."],
+  ["02", "S’accepter", "Arrêter de considérer tes différences comme des défauts."],
+  ["03", "Se construire", "Développer confiance, communication et identité."],
+  ["04", "Évoluer", "Transformer la compréhension de soi en habitudes et actions."],
+  ["05", "Se connecter", "Créer des relations cohérentes avec ta personnalité."],
+  ["06", "Réaliser", "Transformer ton potentiel en projets et résultats."],
+];
+
+const universes = [
+  ["ATEB’S INSPIRE", "Réflexions, articles, livres, formations et contenus.", "/reflexions"],
+  ["ATEB’S ID", "Comprendre ton profil et ta personnalité.", "/se-decouvrir/test"],
+  ["ATEB’S EVOLUTION", "Objectifs, habitudes, progression et accompagnement.", "/parcours"],
+  ["ATEB’S CONNECT", "Relations et rencontres pensées différemment.", "/communaute"],
+  ["ATEB’S FINANCE", "Comprendre, organiser et faire évoluer tes finances.", "/ressources"],
+  ["ATEB’S BUSINESS", "Outils et solutions pour tes projets et entreprises.", "/ressources"],
+];
+
+const books = [
+  ["01", "L’identité avant les objectifs", "Un manifeste pour avancer sans devenir quelqu’un d’autre."],
+  ["02", "Le calme comme force", "Comprendre ce que ton monde intérieur rend possible."],
 ];
 
 export default async function Home() {
-  const [themes, axes, articles] = await Promise.all([getThemes(), getAxes(), getArticles()]);
-  const previewThemes = themes.filter((t) =>
-    ["introversion", "timidite", "confiance", "leadership"].includes(t.slug)
-  );
-
+  const articles = await getArticles().catch(() => []);
   return (
-    <>
-      {/* HERO */}
-      <section className="relative overflow-hidden border-b border-white/10">
-        <div className="mx-auto grid max-w-6xl items-center gap-16 px-6 py-20 md:grid-cols-2 md:py-28">
-          <div>
-            <p className="eyebrow">Ateukeng Brice — L&rsquo;introverti</p>
-            <h1 className="mt-5 font-display text-4xl leading-[1.08] tracking-tight sm:text-5xl md:text-[3.4rem]">
-              Tu n&rsquo;as pas besoin de devenir extraverti pour prendre ta place.
-            </h1>
-            <p className="mt-6 max-w-md text-base leading-relaxed text-paper/70">
-              Comprendre qui tu es. Comprendre comment tu fonctionnes. Et apprendre à utiliser
-              cette différence comme une force.
-            </p>
-            <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
-              <Link
-                href="/se-decouvrir/test"
-                className="border border-gold bg-gold px-6 py-3 text-center text-sm font-medium text-ink transition-colors hover:bg-transparent hover:text-gold"
-              >
-                Commencer à me découvrir
-              </Link>
-              <Link
-                href="/a-propos"
-                className="border border-white/20 px-6 py-3 text-center text-sm text-paper/80 transition-colors hover:border-gold hover:text-gold"
-              >
-                Explorer le projet
-              </Link>
+    <div className="overflow-hidden">
+      <section className="relative border-b border-line">
+        <div className="mx-auto flex min-h-[calc(100vh-8rem)] max-w-7xl flex-col justify-center px-6 py-24 lg:px-10">
+          <p className="eyebrow">ATEB’S INSPIRE / 001</p>
+          <h1 className="mt-8 max-w-5xl font-display text-[clamp(3.5rem,9vw,8.5rem)] leading-[0.9] tracking-[-0.06em] text-pretty">
+            L’identité<br /><span className="text-gold">avant</span> les objectifs.
+          </h1>
+          <div className="mt-12 flex max-w-2xl flex-col gap-8 md:flex-row md:items-end md:justify-between">
+            <p className="max-w-md text-lg leading-relaxed text-paper/65">Comprends qui tu es. Construis qui tu veux devenir.</p>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Link href="/se-decouvrir/test" className="button-primary">Découvrir mon profil <span aria-hidden="true">↗</span></Link>
+              <Link href="/a-propos" className="button-quiet">Explorer l’univers <span aria-hidden="true">↗</span></Link>
             </div>
           </div>
-
-          <div className="flex justify-center md:justify-end" aria-hidden="true">
-            <Compass axes={axes} size={420} />
-          </div>
+          <p className="mt-24 font-mono text-[0.65rem] uppercase tracking-[0.22em] text-paper/35">Un espace pour celles et ceux qui pensent profondément.</p>
         </div>
       </section>
 
-      {/* LE PROBLÈME */}
-      <section className="border-b border-white/10 bg-iron/40">
-        <div className="mx-auto max-w-5xl px-6 py-20">
-          <p className="eyebrow">Le problème</p>
-          <h2 className="mt-4 max-w-2xl font-display text-3xl leading-tight sm:text-4xl">
-            Et si le problème n&rsquo;était pas ton introversion ?
-          </h2>
-
-          <ul className="mt-10 grid gap-4 sm:grid-cols-2">
-            {problemPhrases.map((phrase) => (
-              <li
-                key={phrase}
-                className="border border-white/10 px-5 py-4 font-display text-lg italic text-paper/70"
-              >
-                {phrase}
-              </li>
-            ))}
-          </ul>
-
-          <p className="mt-10 max-w-2xl text-base leading-relaxed text-paper/70">
-            Ce sont des raccourcis. Ils confondent un fonctionnement avec un défaut, et poussent à
-            se corriger plutôt qu&rsquo;à se comprendre. Ce projet existe pour déconstruire ces
-            raccourcis, un à un.
-          </p>
+      <section className="border-b border-line bg-iron/25">
+        <div className="mx-auto grid max-w-7xl gap-16 px-6 py-24 lg:grid-cols-[0.8fr_1.2fr] lg:px-10 lg:py-32">
+          <div><p className="eyebrow">Déconstruire</p><h2 className="section-title mt-5">Et si tu n’étais pas timide&nbsp;?</h2></div>
+          <div><p className="max-w-2xl text-2xl leading-snug text-paper/85 md:text-3xl">Certaines personnes ont simplement une autre manière de réfléchir, de communiquer, de créer des relations, de prendre des décisions et de récupérer leur énergie.</p><div className="mt-14 grid border-t border-line sm:grid-cols-2">{["Introversion ≠ timidité", "Introversion ≠ manque de confiance", "Introversion ≠ faiblesse", "Introversion ≠ antisocialité"].map((item) => <div key={item} className="border-b border-line py-5 text-sm text-paper/65 sm:even:pl-8">{item}</div>)}</div></div>
         </div>
       </section>
 
-      {/* COMPRENDRE L'INTROVERSION */}
-      <section className="border-b border-white/10">
-        <div className="mx-auto max-w-6xl px-6 py-20">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="eyebrow">Comprendre</p>
-              <h2 className="mt-4 font-display text-3xl sm:text-4xl">Dix sujets, sans jargon inutile.</h2>
-            </div>
-            <Link href="/comprendre" className="text-sm text-gold hover:underline">
-              Tout comprendre →
-            </Link>
-          </div>
-
-          <div className="mt-10 grid gap-px overflow-hidden border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
-            {previewThemes.map((theme) => (
-              <Link
-                key={theme.slug}
-                href={`/comprendre/${theme.slug}`}
-                className="group bg-ink px-6 py-8 transition-colors hover:bg-iron/60"
-              >
-                <p className="font-display text-xl">{theme.title}</p>
-                <p className="mt-3 text-sm leading-relaxed text-paper/60">{theme.standfirst}</p>
-                <span className="mt-5 inline-block text-xs text-gold opacity-0 transition-opacity group-hover:opacity-100">
-                  Lire →
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
+      <section className="border-b border-line">
+        <div className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32"><div className="max-w-2xl"><p className="eyebrow">Le parcours</p><h2 className="section-title mt-5">Je me comprends. Je m’accepte. Je me construis.</h2></div><div className="mt-16 grid border-t border-line md:grid-cols-2 lg:grid-cols-3">{journey.map(([number, title, copy]) => <div key={number} className="group border-b border-line py-8 md:pr-8 lg:nth-[3n+2]:border-l lg:nth-[3n+2]:pl-8 lg:nth-[3n+3]:border-l lg:nth-[3n+3]:pl-8"><span className="font-mono text-xs text-gold">{number}</span><h3 className="mt-8 font-display text-3xl group-hover:text-gold">{title}</h3><p className="mt-3 max-w-xs text-sm leading-relaxed text-paper/55">{copy}</p></div>)}</div></div>
       </section>
 
-      {/* QUI ES-TU ? */}
-      <section className="border-b border-white/10 bg-iron/40">
-        <div className="mx-auto grid max-w-6xl items-center gap-14 px-6 py-20 md:grid-cols-[1.1fr_0.9fr]">
-          <div>
-            <p className="eyebrow">Se découvrir</p>
-            <h2 className="mt-4 font-display text-3xl leading-tight sm:text-4xl">
-              Avant de travailler sur tes objectifs, commence par comprendre ton fonctionnement.
-            </h2>
-            <p className="mt-6 max-w-lg text-base leading-relaxed text-paper/70">
-              Un questionnaire d&rsquo;introspection — pas un diagnostic — pour dégager un premier
-              profil : tes forces probables, tes frictions possibles, et un parcours recommandé
-              pour avancer.
-            </p>
-            <Link
-              href="/se-decouvrir/test"
-              className="mt-8 inline-block border border-gold px-6 py-3 text-sm text-gold transition-colors hover:bg-gold hover:text-ink"
-            >
-              Découvrir mon profil
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3 font-mono text-xs uppercase tracking-widest text-paper/50">
-            {["L'Observateur", "Le Penseur", "Le Créatif", "Le Stratégique", "Le Sensible", "Le Sélectif"].map(
-              (label) => (
-                <div key={label} className="border border-white/10 px-4 py-5 text-paper/70">
-                  {label}
-                </div>
-              )
-            )}
-          </div>
-        </div>
+      <section className="border-b border-line bg-gold text-ink">
+        <div className="mx-auto flex max-w-7xl flex-col gap-12 px-6 py-24 lg:flex-row lg:items-end lg:justify-between lg:px-10 lg:py-32"><div className="max-w-3xl"><p className="font-mono text-xs uppercase tracking-[0.2em] text-ink/60">La porte d’entrée</p><h2 className="mt-6 font-display text-[clamp(3rem,7vw,7rem)] leading-[0.88] tracking-[-0.05em]">Avant de construire ta vie, comprends celui qui doit la vivre.</h2></div><Link href="/se-decouvrir/test" className="button-dark">Découvrir mon profil <span aria-hidden="true">↗</span></Link></div>
       </section>
 
-      {/* LES 7 AXES */}
-      <section className="border-b border-white/10">
-        <div className="mx-auto max-w-6xl px-6 py-20">
-          <p className="eyebrow">Le parcours central</p>
-          <h2 className="mt-4 max-w-2xl font-display text-3xl sm:text-4xl">Les 7 axes d&rsquo;introspection.</h2>
-          <p className="mt-4 max-w-xl text-base text-paper/70">
-            Un parcours, pas un système médical. Chaque axe propose une question, un exercice, des
-            ressources.
-          </p>
+      <section className="border-b border-line"><div className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32"><div className="flex flex-col justify-between gap-6 md:flex-row md:items-end"><div><p className="eyebrow">Un même écosystème</p><h2 className="section-title mt-5">Six portes. Une même direction.</h2></div><p className="max-w-sm text-sm leading-relaxed text-paper/55">Pas besoin de tout explorer aujourd’hui. Commence par l’endroit qui te ressemble.</p></div><div className="mt-16 grid border-t border-line sm:grid-cols-2 lg:grid-cols-3">{universes.map(([title, copy, href]) => <Link href={href} key={title} className="group border-b border-line py-8 sm:pr-8 lg:nth-[3n+2]:border-l lg:nth-[3n+2]:pl-8 lg:nth-[3n+3]:border-l lg:nth-[3n+3]:pl-8"><p className="font-mono text-[0.65rem] tracking-[0.16em] text-gold">{title}</p><p className="mt-5 max-w-xs text-lg leading-snug text-paper/75 group-hover:text-paper">{copy}</p><span className="mt-8 inline-block text-sm text-paper/40 group-hover:text-gold">Entrer dans cet univers ↗</span></Link>)}</div></div></section>
 
-          <ol className="mt-10 divide-y divide-white/10 border-y border-white/10">
-            {axes.map((axis) => (
-              <li key={axis.slug} className="flex flex-col gap-2 py-5 sm:flex-row sm:items-baseline sm:gap-8">
-                <span className="font-mono text-sm text-gold">{String(axis.index).padStart(2, "0")}</span>
-                <span className="font-display text-lg">{axis.name}</span>
-                <span className="text-sm text-paper/60 sm:ml-auto sm:text-right">{axis.intent}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+      <section className="border-b border-line bg-iron/25"><div className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32"><div className="flex items-end justify-between gap-6"><div><p className="eyebrow">À lire</p><h2 className="section-title mt-5">Des réflexions pour aller plus loin.</h2></div><Link href="/reflexions" className="button-quiet hidden sm:inline-flex">Tous les articles ↗</Link></div><div className="mt-16 grid gap-10 md:grid-cols-3">{articles.slice(0, 3).map((article) => <Link key={article.slug} href={`/reflexions/${article.slug}`} className="group border-t border-line pt-5"><p className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-gold">{article.category} · {article.reading_minutes} min</p><h3 className="mt-6 font-display text-2xl leading-tight group-hover:text-gold">{article.title}</h3><p className="mt-4 text-sm leading-relaxed text-paper/55">{article.excerpt}</p></Link>)}</div></div></section>
 
-      {/* RÉFLEXIONS */}
-      <section className="border-b border-white/10 bg-iron/40">
-        <div className="mx-auto max-w-6xl px-6 py-20">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="eyebrow">Réflexions</p>
-              <h2 className="mt-4 font-display text-3xl sm:text-4xl">Un magazine, pas un blog.</h2>
-            </div>
-            <Link href="/reflexions" className="text-sm text-gold hover:underline">
-              Tous les articles →
-            </Link>
-          </div>
+      <section className="border-b border-line"><div className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32"><div className="flex items-end justify-between"><div><p className="eyebrow">La bibliothèque</p><h2 className="section-title mt-5">Des livres à garder près de soi.</h2></div><Link href="/bibliotheque" className="button-quiet hidden sm:inline-flex">Voir la bibliothèque ↗</Link></div><div className="mt-16 grid gap-px bg-line md:grid-cols-2">{books.map(([number, title, copy]) => <Link href="/bibliotheque" key={number} className="group bg-ink p-8 md:p-12"><span className="font-mono text-xs text-gold">{number}</span><h3 className="mt-16 max-w-sm font-display text-4xl leading-tight group-hover:text-gold">{title}</h3><p className="mt-6 max-w-sm text-sm leading-relaxed text-paper/55">{copy}</p><span className="mt-12 inline-block text-sm text-paper/50 group-hover:text-gold">Découvrir le livre ↗</span></Link>)}</div></div></section>
 
-          <div className="mt-10 grid gap-8 md:grid-cols-3">
-            {articles.slice(0, 3).map((article) => (
-              <Link key={article.slug} href={`/reflexions/${article.slug}`} className="group block">
-                <p className="font-mono text-[0.65rem] uppercase tracking-widest text-paper/40">
-                  {article.category} · {article.reading_minutes} min
-                </p>
-                <h3 className="mt-3 font-display text-xl leading-snug group-hover:text-gold">
-                  {article.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-paper/60">{article.excerpt}</p>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* NEWSLETTER */}
-      <section>
-        <div className="mx-auto max-w-3xl px-6 py-20 text-center">
-          <p className="eyebrow">Newsletter</p>
-          <h2 className="mt-4 font-display text-3xl sm:text-4xl">
-            Quelques minutes pour mieux te comprendre.
-          </h2>
-          <p className="mx-auto mt-4 max-w-lg text-base text-paper/70">
-            Des réflexions, des outils et des idées pour les personnes qui pensent beaucoup mais
-            parlent parfois moins.
-          </p>
-          <div className="mx-auto mt-8 max-w-md">
-            <Newsletter />
-          </div>
-        </div>
-      </section>
-    </>
+      <section><div className="mx-auto max-w-3xl px-6 py-24 text-center lg:py-32"><p className="eyebrow">La lettre ATEB’S</p><h2 className="section-title mt-5">Quelques lignes pour mieux te comprendre.</h2><p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-paper/60">Des réflexions, des idées et des outils pour avancer sans devenir quelqu’un d’autre.</p><div className="mx-auto mt-10 max-w-md"><Newsletter /></div></div></section>
+    </div>
   );
 }

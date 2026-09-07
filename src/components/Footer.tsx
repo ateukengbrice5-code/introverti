@@ -1,65 +1,8 @@
 import Link from "next/link";
 
-export default function Footer() {
-  return (
-    <footer className="border-t border-white/10 bg-ink">
-      <div className="mx-auto max-w-6xl px-6 py-14">
-        <div className="grid gap-10 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
-          <div>
-            <p className="font-display text-xl">Ateukeng Brice</p>
-            <p className="mt-2 text-sm text-paper/60">L&rsquo;identité avant les objectifs.</p>
-            <p className="mt-6 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-gold">
-              #ServirPourInspirer
-            </p>
-          </div>
-
-          <FooterCol
-            title="Le projet"
-            links={[
-              { href: "/a-propos", label: "À propos" },
-              { href: "/contact", label: "Contact" },
-              { href: "/communaute", label: "Communauté" },
-            ]}
-          />
-          <FooterCol
-            title="Ressources"
-            links={[
-              { href: "/ressources", label: "Bibliothèque de ressources" },
-              { href: "/bibliotheque", label: "Livres & programmes" },
-              { href: "/reflexions", label: "Réflexions" },
-            ]}
-          />
-          <FooterCol
-            title="Légal"
-            links={[
-              { href: "/confidentialite", label: "Confidentialité" },
-              { href: "/conditions", label: "Conditions" },
-            ]}
-          />
-        </div>
-
-        <div className="mt-14 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-paper/40 sm:flex-row sm:items-center sm:justify-between">
-          <span>© {new Date().getFullYear()} Ateukeng Brice — L&rsquo;introverti. Tous droits réservés.</span>
-          <span>Conçu pour ceux qui pensent beaucoup et parlent parfois moins.</span>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-function FooterCol({ title, links }: { title: string; links: { href: string; label: string }[] }) {
-  return (
-    <div>
-      <p className="font-mono text-[0.68rem] uppercase tracking-[0.14em] text-paper/40">{title}</p>
-      <ul className="mt-4 flex flex-col gap-2.5">
-        {links.map((l) => (
-          <li key={l.href}>
-            <Link href={l.href} className="text-sm text-paper/70 hover:text-gold">
-              {l.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+const columns = [
+  { title: "Explorer", links: [["/se-decouvrir/test", "ATEB’S ID"], ["/reflexions", "Articles"], ["/bibliotheque", "Livres"], ["/parcours", "Expériences"]] },
+  { title: "L’écosystème", links: [["/parcours", "ATEB’S Evolution"], ["/communaute", "ATEB’S Connect"], ["/ressources", "ATEB’S Finance"], ["/ressources", "ATEB’S Business"]] },
+  { title: "Nous retrouver", links: [["#", "Instagram"], ["#", "Facebook"], ["#", "TikTok"], ["#", "YouTube"], ["#", "LinkedIn"]] },
+];
+export default function Footer() { return <footer className="border-t border-line"><div className="mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:py-20"><div className="grid gap-14 lg:grid-cols-[1.5fr_2fr]"><div><Link href="/" className="font-display text-3xl">ATEB’S INSPIRE</Link><p className="mt-4 max-w-xs text-sm leading-relaxed text-paper/55">L’identité avant les objectifs.</p></div><div className="grid gap-10 sm:grid-cols-3">{columns.map((column) => <div key={column.title}><p className="eyebrow text-paper/45">{column.title}</p><ul className="mt-5 flex flex-col gap-3">{column.links.map(([href, label]) => <li key={label}><Link href={href} className="text-sm text-paper/65 transition-colors hover:text-gold">{label}</Link></li>)}</ul></div>)}</div></div><div className="mt-20 flex flex-col gap-3 border-t border-line pt-5 text-[.68rem] text-paper/35 sm:flex-row sm:justify-between"><span>© {new Date().getFullYear()} ATEB’S INSPIRE</span><span>L’identité avant les objectifs.</span></div></div></footer>; }
