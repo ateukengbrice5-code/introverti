@@ -7,12 +7,25 @@ body { background: var(--ink); color: var(--paper); font-family: var(--font-inte
 ::selection { background: var(--gold); color: var(--ink); }
 .eyebrow { color: var(--gold); font-family: var(--font-plex-mono); font-size: .68rem; letter-spacing: .18em; text-transform: uppercase; }
 .section-title { max-width: 48rem; font-family: var(--font-fraunces); font-size: clamp(2.5rem, 5vw, 5rem); letter-spacing: -.045em; line-height: .98; text-wrap: balance; }
-.button-primary, .button-dark, .button-quiet { display: inline-flex; align-items: center; justify-content: center; gap: .75rem; padding: .85rem 1.1rem; font-size: .78rem; transition: background-color .25s, color .25s, border-color .25s; }
+.hero-title { font-size: clamp(4rem, 11vw, 10.5rem); letter-spacing: -.075em; line-height: .82; text-wrap: balance; }
+.hero-title em { color: var(--gold); font-style: normal; }
+.button-primary, .button-dark, .button-quiet { display: inline-flex; align-items: center; justify-content: center; gap: .7rem; padding: .85rem 1.1rem; font-family: var(--font-plex-mono); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; transition: background-color .25s, color .25s, border-color .25s, transform .25s; }
+.button-primary svg, .button-dark svg, .button-quiet svg { width: 1rem; height: 1rem; transition: transform .25s; }
+.button-primary:hover svg, .button-dark:hover svg, .button-quiet:hover svg { transform: translate(2px, -2px); }
 .button-primary { background: var(--gold); color: var(--ink); }
 .button-primary:hover { background: var(--gold-soft); }
 .button-dark { border: 1px solid var(--ink); color: var(--ink); }
 .button-dark:hover { background: var(--ink); color: var(--paper); }
 .button-quiet { border: 1px solid var(--line-strong); color: rgba(246,243,236,.75); }
 .button-quiet:hover { border-color: var(--gold); color: var(--gold); }
+.journey-card, .universe-card, .book-card { transition: background-color .35s, border-color .35s; }
+.journey-card:hover { background: rgba(246,243,236,.025); }
+.universe-card:hover { background: rgba(246,243,236,.035); }
+.book-card { min-height: 25rem; }
+.book-card:hover { background: var(--iron); }
+.id-panel { position: relative; }
+.id-panel::before { content: "ID"; position: absolute; right: 4vw; top: 50%; transform: translateY(-55%); color: rgba(11,11,12,.08); font-family: var(--font-fraunces); font-size: clamp(12rem, 32vw, 35rem); font-weight: 500; letter-spacing: -.12em; line-height: .7; pointer-events: none; }
+.id-panel > div { position: relative; z-index: 1; }
+@media (max-width: 640px) { .hero-title { font-size: clamp(3.7rem, 17vw, 6rem); } .book-card { min-height: 21rem; } .id-panel::before { right: -1rem; top: 28%; } }
 :focus-visible { outline: 1px solid var(--gold); outline-offset: 4px; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .001ms !important; } }
