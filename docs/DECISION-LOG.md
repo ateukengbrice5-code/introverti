@@ -182,6 +182,54 @@ Un seul fichier pour toutes les décisions. Ne jamais en créer un second.
 
 **Reste à faire** : pas d'interface pour gérer les admins (ajout/retrait actuellement par SQL direct) — acceptable pour l'instant vu le nombre de comptes.
 
+## 01/09/2026 — Interface de gestion des admins (`/admin/admins`)
+
+**Contexte** : suite à l'entrée précédente (admin par compte), plus besoin de SQL direct pour ajouter/retirer un admin.
+
+**Implémentation** : nouvelle page `/admin/admins`, dans le même style que les autres pages admin (Server Actions + `getSupabaseAdmin()`, pas de nouveau pattern).
+- Liste les admins actuels (e-mail + date d'ajout).
+- Formulaire d'ajout par e-mail : `admin_users` n'a pas de colonne e-mail (seulement `user_id`), donc la recherche passe par `auth.admin.listUsers()` (API admin Auth de Supabase, via le client service role) plutôt que par une table postgrest — recoupement par e-mail (insensible à la casse). Le compte doit déjà exister (s'être inscrit sur le site) ; message clair si introuvable.
+- Retrait par bouton, avec **garde-fou** : impossible de retirer le dernier admin restant (compte avant suppression), pour éviter de fermer `/admin` à tout le monde sans moyen simple de revenir en arrière.
+- Lien ajouté dans la nav de `admin/layout.tsx`.
+
+**Validé** : `next build` compile et type-check sans erreur.
+
+## 02/09/2026 — SSO Ateb ID (cookie de session partagé entre sous-domaines)
+
+**Contexte** : priorité fixée en vue d'un déploiement en bêta d'Ateb Evolution (ex-Companion) et Ateb Finance sur Vercel, sous des sous-domaines d'un même domaine racine (déploiement sur `*.vercel.app` explicitement écarté : Vercel — et les navigateurs — interdisent le partage de cookies sur un domaine public comme `vercel.app`).
+
+**Cause du problème résolu** : les 3 apps (site, Evolution, Finance) sont 3 déploiements séparés, donc 3 origines différentes. Le site utilisait déjà des cookies de session (`@supabase/ssr`, `createServerClient`) mais Evolution et Finance stockaient leur session dans le `localStorage` du navigateur — strictement isolé par origine, y compris entre sous-domaines. Un compte Ateb ID unique existait bien en base, mais rien ne propageait la connexion d'une app à l'autre.
+
+**Implémentation** — cookie de session partagé, domaine configurable par variable d'environnement (aucune valeur en dur) :
+- `lib/supabase/server.ts` et `middleware.ts` acceptent désormais `cookieOptions.domain` via la nouvelle variable `AUTH_COOKIE_DOMAIN` — vide en local (cookie host-only, comportement inchangé), ex. `.atebsinspire.com` en production.
+- Même changement côté Evolution (`VITE_AUTH_COOKIE_DOMAIN`) et Finance (`VITE_AUTH_COOKIE_DOMAIN`), qui sont passés de `@supabase/supabase-js` (localStorage) à `@supabase/ssr` (`createBrowserClient`, cookie) — voir leurs propres DECISION-LOG respectifs.
+- `sameSite: 'lax'` et `secure: true` uniquement quand un domaine est fourni (évite de casser le dev local en HTTP).
+
+**Condition pour que ça fonctionne réellement** : chaque app doit être déployée sur un **sous-domaine** du même domaine racine (ex. `www.atebsinspire.com`, `evolution.atebsinspire.com`, `finance.atebsinspire.com`). Domaine final pas encore choisi ; `AUTH_COOKIE_DOMAIN` reste à renseigner au déploiement.
+
+**Validé** : `build`/`typecheck` passent.
+
+## 06/09/2026 — Partage des articles (`ArticleSharing.tsx`)
+
+**Contexte** : le bouton « Partager cet article » existait déjà dans l'UI mais n'avait aucun comportement (`onClick` absent).
+
+**Implémentation** : nouveau composant `ArticleSharing.tsx`, câblé sur `reflexions/[slug]/page.tsx`.
+- Web Share API native (`navigator.share`) quand disponible (mobile surtout), sinon repli sur la copie du lien.
+- Liens directs Facebook / X / WhatsApp / LinkedIn.
+- Bloc « Citer cet article » : génère une citation avec attribution (`« titre », initialement publié sur Ateb's Inspire — url`) et un bouton pour la copier — ne peut pas empêcher la copie du texte par ailleurs, réduit juste la friction pour bien attribuer plutôt que de ne pas le faire.
+
+## 08/09/2026 — Correctif `.env` (mauvais noms de variables) + partage du résultat de test
+
+**Symptôme rapporté** : le bouton Admin semblait ne pas mener au studio d'administration.
+
+**Cause trouvée** : `.env` définissait `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` — les noms de variables des projets **Vite** (Evolution, Finance) — alors que ce projet est en **Next.js**, qui lit `NEXT_PUBLIC_SUPABASE_URL`/`NEXT_PUBLIC_SUPABASE_ANON_KEY`. Avec les mauvais noms, le client Supabase ne recevait jamais d'URL/clé valides côté site : `is_admin()` ne pouvait jamais répondre, cassant la détection admin dans `Header.tsx` et le middleware. **`SUPABASE_SERVICE_ROLE_KEY` était en plus totalement absente du fichier**, ce qui aurait aussi fait échouer toutes les routes `/admin` et `/api/test/complete` (`getSupabaseAdmin()` lève une erreur sans elle).
+
+**Correction** : `.env` corrigé avec les bons noms de variables ; `SUPABASE_SERVICE_ROLE_KEY`, `AUTH_COOKIE_DOMAIN` et `NEXT_PUBLIC_SITE_URL` ajoutés (vides, à renseigner — la clé service_role n'est jamais générée ni connue par l'IA, à récupérer soi-même dans le dashboard Supabase).
+
+**Partage du résultat de test** — n'existait pas, ajouté (`ResultSharing.tsx`, sur `se-decouvrir/resultat/page.tsx`) : **piège évité** — `/se-decouvrir/resultat` est une page privée qui affiche toujours le profil du compte *actuellement connecté*. Partager cette URL telle quelle aurait envoyé le destinataire soit sur un mur de connexion, soit — pire — sur son propre résultat s'il est déjà connecté, jamais sur celui de l'expéditeur. Le composant partage donc un **texte** (titre du profil + invitation à faire le test) avec un lien vers `/se-decouvrir/test` (public), jamais l'URL privée ni les dimensions détaillées — cohérent avec le principe du site : le résultat n'est pas une étiquette à exhiber.
+
+**Validé** : `build`/`typecheck` passent (même limite d'accès réseau au build pour la génération statique que les entrées précédentes — sans rapport avec ces changements).
+
 ## 25/08/2026 — Incident technique : perte et reconstruction du schéma
 
 - Une manipulation de pause/restore du projet `atebs-inspire-core` (dans le but de libérer un slot gratuit pour restaurer `inroverti`) a provoqué la perte complète du schéma (Phase 0, 1, 2a).

@@ -118,10 +118,17 @@ export default async function Home() {
 
         <ol className="mt-12 flex flex-col divide-y divide-ink/10">
           {axes.map((axis) => (
-            <li key={axis.slug} className="flex items-baseline gap-6 py-5">
+            <li key={axis.slug} className="grid gap-2 py-7 sm:grid-cols-[3rem_1fr]">
               <span className="font-mono text-sm text-gold">{String(axis.index).padStart(2, "0")}</span>
-              <span className="font-display text-lg">{axis.name}</span>
-              <span className="ml-auto text-right text-sm text-ink/50">{axis.intent}</span>
+              <div>
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <span className="font-display text-lg">{axis.name}</span>
+                  <span className="text-sm text-ink/50">{axis.intent}</span>
+                </div>
+                <p className="mt-2 max-w-xl text-sm italic leading-relaxed text-ink/70">
+                  {axis.question}
+                </p>
+              </div>
             </li>
           ))}
         </ol>

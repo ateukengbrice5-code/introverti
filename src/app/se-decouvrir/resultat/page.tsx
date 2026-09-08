@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { interpretBehavioralProfile } from "@/lib/profile/interpret";
+import ResultSharing from "@/components/ResultSharing";
 
 export const metadata: Metadata = {
   title: "Ton profil",
@@ -123,7 +124,9 @@ export default async function ResultatPage() {
         ))}
       </div>
 
-      <div className="mt-14 border-t border-white/10 pt-8">
+      <ResultSharing titre={result.titre} />
+
+      <div className="mt-8">
         <Link href="/se-decouvrir/test" className="text-sm text-paper/60 hover:text-gold">
           Refaire le questionnaire →
         </Link>

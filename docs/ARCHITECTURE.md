@@ -27,7 +27,11 @@ Toutes les tables produit-spécifiques (issues de la réconciliation des projets
 
 Fonctions : `has_permission(user_id, product, scope)` (vérification RLS), `handle_new_user()` (trigger `on_auth_user_created`, provisionne en une fois `core_profile` + `companion_state` + `finance_profile` + `dating_profile`) — toutes deux `SECURITY DEFINER` sans accès public.
 
-`admin_users (user_id, granted_at)` + `is_admin()` (`SECURITY DEFINER`, sans paramètre, vérifie uniquement `auth.uid()`) : protège `/admin` du site éditorial (voir DECISION-LOG.md, 01/09/2026) — remplace l'ancien mot de passe partagé. Ajout/retrait d'un admin par requête SQL directe sur `admin_users`, pas d'interface dédiée pour l'instant.
+`admin_users (user_id, granted_at)` + `is_admin()` (`SECURITY DEFINER`, sans paramètre, vérifie uniquement `auth.uid()`) : protège `/admin` du site éditorial (voir DECISION-LOG.md, 01/09/2026) — remplace l'ancien mot de passe partagé. Interface de gestion sur `/admin/admins` (ajout par e-mail, retrait avec garde-fou contre la suppression du dernier admin) — voir DECISION-LOG.md, 01/09/2026.
+
+**SSO Ateb ID** : `lib/supabase/server.ts` et `middleware.ts` acceptent `cookieOptions.domain` via la variable `AUTH_COOKIE_DOMAIN` (vide en local, domaine racine partagé en production, ex. `.atebsinspire.com`) — permet à la session de rester valide sur les sous-domaines des autres apps Ateb (Evolution, Finance). Voir DECISION-LOG.md, 02/09/2026.
+
+**Partage** : `ArticleSharing.tsx` (articles — Web Share API, réseaux sociaux, citation avec attribution) et `ResultSharing.tsx` (résultat de test — partage un texte + lien vers `/se-decouvrir/test`, jamais l'URL privée du résultat ni les dimensions détaillées). Voir DECISION-LOG.md, 06/09/2026 et 08/09/2026.
 
 Bucket de stockage partagé `avatars` (pas préfixé par produit, puisque `avatar_url` vit sur `core_profile`).
 
