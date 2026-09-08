@@ -1,6 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import HeaderBar from "./HeaderBar";
+import HeaderNav from "./HeaderNav";
 
 const nav = [
   { href: "/comprendre", label: "Comprendre" },
@@ -33,13 +34,42 @@ export default async function Header() {
   const navItems = isAdmin ? [...nav, { href: "/admin", label: "Admin" }] : nav;
 
   return (
-    <HeaderBar navItems={navItems} accountHref={accountHref} accountLabel={accountLabel}>
-      <Link href="/" className="font-display text-lg tracking-tight text-paper">
-        Ateukeng Brice
-        <span className="ml-2 hidden font-mono text-[0.65rem] uppercase tracking-[0.16em] text-gold sm:inline">
-          L&rsquo;introverti
-        </span>
-      </Link>
-    </HeaderBar>
+    <header className="relative border-b border-white/10 bg-ink">
+      {/* Bandeau photo + identité */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0">
+          <Image
+            src="/hero-banner.svg"
+            alt=""
+            fill
+            priority
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/40 to-ink" />
+        </div>
+
+        <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-5 px-6 py-16 text-center sm:py-20">
+          <Link href="/" className="flex flex-col items-center gap-4 font-display text-paper">
+            <Image src="/logo.svg" alt="Ateukeng Brice — L'introverti" width={40} height={40} priority />
+            <span className="flex flex-col items-center gap-3">
+              <span className="text-4xl tracking-tight sm:text-5xl">Ateukeng Brice</span>
+              <span className="flex items-center gap-4">
+                <span className="h-px w-10 bg-gold/60" aria-hidden="true" />
+                <span className="font-mono text-xs uppercase tracking-[0.35em] text-gold">
+                  L&rsquo;introverti
+                </span>
+                <span className="h-px w-10 bg-gold/60" aria-hidden="true" />
+              </span>
+            </span>
+          </Link>
+
+          <p className="max-w-md font-serif italic text-sm leading-relaxed text-paper/70 sm:text-base">
+            Comprendre son monde intérieur pour mieux vivre le monde extérieur.
+          </p>
+        </div>
+      </div>
+
+      <HeaderNav nav={navItems} accountHref={accountHref} accountLabel={accountLabel} />
+    </header>
   );
 }
