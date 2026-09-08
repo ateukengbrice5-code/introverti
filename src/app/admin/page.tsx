@@ -1,52 +1,45 @@
-cat > src/app/admin/articles/page.tsx << 'EOF'
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getArticles } from "@/lib/data/articles";
-import { deleteArticle } from "./actions";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
-export const metadata: Metadata = { title: "Admin · Articles", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Tableau de bord admin", robots: { index: false, follow: false } };
 
-export default async function AdminArticlesPage() {
-  const articles = await getArticles();
+const tables = [
+  { key: "articles", label: "Articles", href: "/admin/articles" },
+  { key: "journeys", label: "Parcours", href: "/admin/parcours" },
+  { key: "themes", label: "Thèmes", href: "/admin/themes" },
+  { key: "resources", label: "Ressources", href: "/admin/ressources" },
+  { key: "products", label: "Produits", href: "/admin/produits" },
+  { key: "newsletter_subscribers", label: "Inscrits newsletter", href: "/admin/newsletter" },
+] as const;
+
+export default async function AdminDashboard() {
+  const supabase = getSupabaseAdmin();
+  const counts = await Promise.all(
+    tables.map(async (t) => {
+      const { count, error } = await supabase.from(t.key).select("*", { count: "exact", head: true });
+      return { ...t, count: error ? null : count };
+    })
+  );
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="eyebrow">Réflexions</p>
-          <h1 className="mt-2 font-display text-3xl">Articles</h1>
-        </div>
-        <Link href="/admin/articles/new" className="border border-gold px-4 py-2 text-sm text-gold hover:bg-gold hover:text-ink">
-          + Nouvel article
-        </Link>
-      </div>
+      <p className="eyebrow">Tableau de bord</p>
+      <h1 className="mt-3 font-display text-3xl">Contenu du site</h1>
+      <p className="mt-2 max-w-lg text-sm text-paper/60">
+        Toute modification ici est immédiatement visible sur le site public — aucun déploiement requis.
+      </p>
 
-      <ul className="mt-8 divide-y divide-white/10 border-y border-white/10">
-        {articles.map((a) => (
-          <li key={a.slug} className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="font-display text-lg">{a.title}</p>
-              <p className="text-xs text-paper/40">{a.category} · {a.published_at} · /{a.slug}</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link href={`/reflexions/${a.slug}`} target="_blank" className="text-xs text-paper/50 hover:text-gold">
-                Voir
-              </Link>
-              <Link href={`/admin/articles/${a.slug}/edit`} className="text-xs text-gold hover:underline">
-                Modifier
-              </Link>
-              <form action={deleteArticle}>
-                <input type="hidden" name="slug" value={a.slug} />
-                <button type="submit" className="text-xs text-red-400/80 hover:text-red-400">
-                  Supprimer
-                </button>
-              </form>
-            </div>
-          </li>
+      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {counts.map((t) => (
+          <Link key={t.key} href={t.href} className="group border border-white/10 p-6 hover:border-gold">
+            <p className="font-mono text-xs uppercase tracking-widest text-paper/40">{t.label}</p>
+            <p className="mt-2 font-display text-3xl group-hover:text-gold">
+              {t.count ?? "—"}
+            </p>
+          </Link>
         ))}
-        {articles.length === 0 && <p className="py-8 text-sm text-paper/50">Aucun article pour l&rsquo;instant.</p>}
-      </ul>
+      </div>
     </div>
   );
 }
-EOF
