@@ -1,29 +1,43 @@
-import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getJourney } from "@/lib/data/journeys";
-import JourneyForm from "../../JourneyForm";
-import { updateJourney, deleteJourney } from "../../actions";
+import { getJourneys } from "@/lib/data/journeys";
+import { deleteJourney } from "./actions";
 
-export const metadata: Metadata = { title: "Admin · Modifier le parcours", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "Admin · Parcours", robots: { index: false, follow: false } };
 
-export default async function EditJourneyPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const journey = await getJourney(slug);
-  if (!journey) notFound();
-  const boundUpdate = updateJourney.bind(null, slug);
-
+export default async function AdminJourneysPage() {
+  const journeys = await getJourneys();
   return (
     <div>
-      <Link href="/admin/parcours" className="text-xs text-gold hover:underline">← Parcours</Link>
-      <h1 className="mt-4 font-display text-3xl">Modifier « {journey.title} »</h1>
-      <div className="mt-8 max-w-2xl">
-        <JourneyForm action={boundUpdate} journey={journey} slugEditable={false} />
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="eyebrow">Parcours</p>
+          <h1 className="mt-2 font-display text-3xl">Parcours</h1>
+        </div>
+        <Link href="/admin/parcours/new" className="border border-gold px-4 py-2 text-sm text-gold hover:bg-gold hover:text-ink">
+          + Nouveau parcours
+        </Link>
       </div>
-      <form action={deleteJourney} className="mt-10 border-t border-white/10 pt-6">
-        <input type="hidden" name="slug" value={journey.slug} />
-        <button type="submit" className="text-sm text-red-400/80 hover:text-red-400">Supprimer définitivement ce parcours</button>
-      </form>
+
+      <ul className="mt-8 divide-y divide-white/10 border-y border-white/10">
+        {journeys.map((j) => (
+          <li key={j.slug} className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="font-display text-lg">{j.title}</p>
+              <p className="text-xs text-paper/40">{j.duration} · /{j.slug}</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <Link href={`/parcours/${j.slug}`} target="_blank" className="text-xs text-paper/50 hover:text-gold">Voir</Link>
+              <Link href={`/admin/parcours/${j.slug}/edit`} className="text-xs text-gold hover:underline">Modifier</Link>
+              <form action={deleteJourney}>
+                <input type="hidden" name="slug" value={j.slug} />
+                <button type="submit" className="text-xs text-red-400/80 hover:text-red-400">Supprimer</button>
+              </form>
+            </div>
+          </li>
+        ))}
+        {journeys.length === 0 && <p className="py-8 text-sm text-paper/50">Aucun parcours pour l&rsquo;instant.</p>}
+      </ul>
     </div>
   );
 }
