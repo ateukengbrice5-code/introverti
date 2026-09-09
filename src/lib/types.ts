@@ -31,6 +31,8 @@ export interface Category {
   description: string;
 }
 
+export type ArticleStatus = "draft" | "review" | "scheduled" | "published" | "archived";
+
 export interface Article {
   slug: string;
   title: string;
@@ -39,10 +41,12 @@ export interface Article {
   author: string;
   published_at: ISODate;
   reading_minutes: number;
-  cover_note: string; // description texte de l'image de couverture (pas de lorem ipsum, pas d'asset binaire en V1)
+  cover_note: string; // légende affichée sous l'image de couverture
+  cover_image_url?: string | null; // URL publique de l'image de couverture (Supabase Storage)
   excerpt: string;
   body: string[]; // paragraphes
   related?: string[]; // slugs d'articles associés
+  status: ArticleStatus;
 }
 
 /** Une des 6 grandes thématiques de la section "Comprendre" (section 6). */

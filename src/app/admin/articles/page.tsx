@@ -1,12 +1,20 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getArticles } from "@/lib/data/articles";
+import { getArticlesAdmin } from "@/lib/data/articles";
 import { deleteArticle } from "./actions";
 
 export const metadata: Metadata = { title: "Admin · Articles", robots: { index: false, follow: false } };
 
+const STATUS_LABELS: Record<string, string> = {
+  draft: "Brouillon",
+  review: "En relecture",
+  scheduled: "Programmé",
+  published: "Publié",
+  archived: "Archivé",
+};
+
 export default async function AdminArticlesPage() {
-  const articles = await getArticles();
+  const articles = await getArticlesAdmin();
 
   return (
     <div>
@@ -24,7 +32,18 @@ export default async function AdminArticlesPage() {
         {articles.map((a) => (
           <li key={a.slug} className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="font-display text-lg">{a.title}</p>
+              <p className="font-display text-lg">
+                {a.title}{" "}
+                <span
+                  className={`ml-2 rounded-full border px-2 py-0.5 align-middle font-mono text-[0.6rem] uppercase tracking-widest ${
+                    a.status === "published"
+                      ? "border-gold/40 text-gold"
+                      : "border-white/20 text-paper/50"
+                  }`}
+                >
+                  {STATUS_LABELS[a.status] ?? a.status}
+                </span>
+              </p>
               <p className="text-xs text-paper/40">{a.category} · {a.published_at} · /{a.slug}</p>
             </div>
             <div className="flex items-center gap-4">

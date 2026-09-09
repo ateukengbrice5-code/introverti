@@ -85,7 +85,44 @@ export default function ArticleForm({
         </Field>
       </div>
 
-      <Field label="Note de couverture (description de l'image, pas de fichier en V1)">
+      <div className="grid gap-5 sm:grid-cols-2">
+        <Field label="Statut">
+          <select
+            name="status"
+            defaultValue={article?.status ?? "draft"}
+            required
+            className="w-full border border-white/20 bg-ink px-3 py-2 text-sm focus:border-gold"
+          >
+            <option value="draft">Brouillon</option>
+            <option value="review">En relecture</option>
+            <option value="scheduled">Programmé</option>
+            <option value="published">Publié</option>
+            <option value="archived">Archivé</option>
+          </select>
+        </Field>
+      </div>
+
+      <Field label="Image de couverture (JPG/PNG/WebP)">
+        {article?.cover_image_url && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={article.cover_image_url}
+            alt=""
+            className="mb-2 h-32 w-full rounded object-cover"
+          />
+        )}
+        <input
+          type="file"
+          name="cover_image"
+          accept="image/png,image/jpeg,image/webp"
+          className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm file:mr-3 file:border-0 file:bg-gold file:px-3 file:py-1 file:text-ink"
+        />
+        <p className="mt-1 text-[0.7rem] text-paper/40">
+          {article?.cover_image_url ? "Laisse vide pour garder l'image actuelle." : "Optionnel — laisse vide pour ne pas mettre d'image."}
+        </p>
+      </Field>
+
+      <Field label="Note de couverture (légende affichée sous l'image)">
         <input name="cover_note" defaultValue={article?.cover_note} required className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold" />
       </Field>
 

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getArticle, getCategories } from "@/lib/data/articles";
+import { getArticleAdmin, getCategories } from "@/lib/data/articles";
 import ArticleForm from "../../ArticleForm";
 import { updateArticle, deleteArticle } from "../../actions";
 
@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Admin · Modifier l'article", robots
 
 export default async function EditArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const [article, categories] = await Promise.all([getArticle(slug), getCategories()]);
+  const [article, categories] = await Promise.all([getArticleAdmin(slug), getCategories()]);
   if (!article) notFound();
 
   const boundUpdate = updateArticle.bind(null, slug);
