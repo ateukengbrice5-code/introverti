@@ -1,13 +1,16 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getArticles, getArticle, getCategory } from "@/lib/data/articles";
+import { getArticle, getCategory } from "@/lib/data/articles";
 import ArticleSharing from "@/components/ArticleSharing";
 
-export async function generateStaticParams() {
-  const articles = await getArticles();
-  return articles.map((a) => ({ slug: a.slug }));
-}
+// Pas de generateStaticParams ici : le Header (racine du layout) lit les
+// cookies de session à chaque requête, ce qui rend tout le site dynamique.
+// Pré-générer cette route en statique entrait en conflit avec ça et faisait
+// planter (digest DYNAMIC_SERVER_USAGE) le premier chargement de tout
+// nouvel article publié après le build. Rendu 100% à la demande à la place —
+// cohérent avec la promesse de l'admin : "immédiatement visible, sans
+// déploiement".
 
 export async function generateMetadata({
   params,

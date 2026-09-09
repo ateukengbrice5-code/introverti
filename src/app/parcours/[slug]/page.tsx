@@ -1,13 +1,12 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getJourneys, getJourney } from "@/lib/data/journeys";
+import { getJourney } from "@/lib/data/journeys";
 import { getResources } from "@/lib/data/library";
 
-export async function generateStaticParams() {
-  const journeys = await getJourneys();
-  return journeys.map((j) => ({ slug: j.slug }));
-}
+// Pas de generateStaticParams : voir le commentaire équivalent dans
+// src/app/reflexions/[slug]/page.tsx (conflit avec le Header dynamique,
+// digest DYNAMIC_SERVER_USAGE sur tout nouveau contenu après le build).
 
 export async function generateMetadata({
   params,
