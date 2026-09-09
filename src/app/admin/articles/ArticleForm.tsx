@@ -1,4 +1,18 @@
+"use client";
+
+import { useState } from "react";
 import { Article, Category } from "@/lib/types";
+
+// Transforme un titre en slug propre : minuscules, sans accents, mots
+// séparés par des tirets, sans caractères spéciaux.
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // enlève les accents (é -> e, ï -> i, etc.)
+    .replace(/[^a-z0-9]+/g, "-") // tout ce qui n'est pas alphanumérique -> tiret
+    .replace(/^-+|-+$/g, ""); // enlève les tirets en début/fin
+}
 
 export default function ArticleForm({
   action,
@@ -11,12 +25,22 @@ export default function ArticleForm({
   categories: Category[];
   slugEditable?: boolean;
 }) {
+  const [slug, setSlug] = useState(article?.slug ?? "");
+  // Tant que l'utilisateur n'a pas touché au champ slug lui-même, on le
+  // régénère automatiquement à chaque frappe dans le titre. Dès qu'il édite
+  // le slug à la main, on arrête de le toucher pour ne pas écraser son choix.
+  const [slugTouched, setSlugTouched] = useState(false);
+
   return (
     <form action={action} className="flex flex-col gap-5">
       <Field label="Slug (URL, ex. mon-titre-darticle)">
         <input
           name="slug"
-          defaultValue={article?.slug}
+          value={slug}
+          onChange={(e) => {
+            setSlugTouched(true);
+            setSlug(slugify(e.target.value));
+          }}
           required
           disabled={!slugEditable}
           className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm disabled:opacity-50 focus:border-gold"
@@ -24,7 +48,15 @@ export default function ArticleForm({
       </Field>
 
       <Field label="Titre">
-        <input name="title" defaultValue={article?.title} required className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold" />
+        <input
+          name="title"
+          defaultValue={article?.title}
+          onChange={(e) => {
+            if (!slugTouched && slugEditable) setSlug(slugify(e.target.value));
+          }}
+          required
+          className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold"
+        />
       </Field>
 
       <Field label="Sous-titre">

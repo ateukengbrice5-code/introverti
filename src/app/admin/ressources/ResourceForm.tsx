@@ -1,4 +1,16 @@
+"use client";
+
+import { useState } from "react";
 import { Resource } from "@/lib/types";
+
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
 
 const types: Resource["type"][] = ["ebook", "fiche", "exercice", "audio", "video"];
 
@@ -11,10 +23,23 @@ export default function ResourceForm({
   resource?: Resource;
   slugEditable?: boolean;
 }) {
+  const [slug, setSlug] = useState(resource?.slug ?? "");
+  const [slugTouched, setSlugTouched] = useState(false);
+
   return (
     <form action={action} className="flex flex-col gap-5">
       <Field label="Slug (URL)">
-        <input name="slug" defaultValue={resource?.slug} required disabled={!slugEditable} className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm disabled:opacity-50 focus:border-gold" />
+        <input
+          name="slug"
+          value={slug}
+          onChange={(e) => {
+            setSlugTouched(true);
+            setSlug(slugify(e.target.value));
+          }}
+          required
+          disabled={!slugEditable}
+          className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm disabled:opacity-50 focus:border-gold"
+        />
       </Field>
       <Field label="Type">
         <select name="type" defaultValue={resource?.type ?? "fiche"} className="w-full border border-white/20 bg-ink px-3 py-2 text-sm focus:border-gold">
@@ -22,7 +47,15 @@ export default function ResourceForm({
         </select>
       </Field>
       <Field label="Titre">
-        <input name="title" defaultValue={resource?.title} required className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold" />
+        <input
+          name="title"
+          defaultValue={resource?.title}
+          onChange={(e) => {
+            if (!slugTouched && slugEditable) setSlug(slugify(e.target.value));
+          }}
+          required
+          className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold"
+        />
       </Field>
       <Field label="Description">
         <textarea name="description" defaultValue={resource?.description} required rows={3} className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold" />

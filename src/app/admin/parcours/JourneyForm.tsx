@@ -1,4 +1,16 @@
+"use client";
+
+import { useState } from "react";
 import { Journey } from "@/lib/types";
+
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
 
 export default function JourneyForm({
   action,
@@ -10,14 +22,34 @@ export default function JourneyForm({
   slugEditable?: boolean;
 }) {
   const stepsText = journey?.steps.map((s) => `${s.title} | ${s.description}`).join("\n");
+  const [slug, setSlug] = useState(journey?.slug ?? "");
+  const [slugTouched, setSlugTouched] = useState(false);
 
   return (
     <form action={action} className="flex flex-col gap-5">
       <Field label="Slug (URL)">
-        <input name="slug" defaultValue={journey?.slug} required disabled={!slugEditable} className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm disabled:opacity-50 focus:border-gold" />
+        <input
+          name="slug"
+          value={slug}
+          onChange={(e) => {
+            setSlugTouched(true);
+            setSlug(slugify(e.target.value));
+          }}
+          required
+          disabled={!slugEditable}
+          className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm disabled:opacity-50 focus:border-gold"
+        />
       </Field>
       <Field label="Titre">
-        <input name="title" defaultValue={journey?.title} required className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold" />
+        <input
+          name="title"
+          defaultValue={journey?.title}
+          onChange={(e) => {
+            if (!slugTouched && slugEditable) setSlug(slugify(e.target.value));
+          }}
+          required
+          className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold"
+        />
       </Field>
       <Field label="Public visé">
         <input name="audience" defaultValue={journey?.audience} required className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold" />
