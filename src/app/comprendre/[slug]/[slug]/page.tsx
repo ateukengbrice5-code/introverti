@@ -3,9 +3,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getTheme } from "@/lib/data/themes";
 
-// Pas de generateStaticParams : voir le commentaire équivalent dans
-// src/app/reflexions/[slug]/page.tsx (conflit avec le Header dynamique,
-// digest DYNAMIC_SERVER_USAGE sur tout nouveau contenu après le build).
+// Voir le commentaire équivalent dans src/app/reflexions/[slug]/page.tsx.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
