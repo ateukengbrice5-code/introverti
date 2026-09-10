@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Admin · Modifier la ressource", rob
 
 export default async function EditResourcePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const resources = await getResources();
+  const resources = await getResources({ includeDrafts: true });
   const resource = resources.find((r) => r.slug === slug);
   if (!resource) notFound();
   const boundUpdate = updateResource.bind(null, slug);

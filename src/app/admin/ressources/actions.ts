@@ -12,6 +12,7 @@ function resourceFromForm(formData: FormData) {
     description: String(formData.get("description") ?? "").trim(),
     format_note: String(formData.get("format_note") ?? "").trim(),
     video_url: String(formData.get("video_url") ?? "").trim() || null,
+    status: String(formData.get("status") ?? "draft").trim(),
   };
 }
 
@@ -39,6 +40,7 @@ export async function updateResource(slug: string, formData: FormData) {
       description: resource.description,
       format_note: resource.format_note,
       video_url: resource.video_url,
+      status: resource.status,
     })
     .eq("slug", slug);
   if (error) throw new Error(error.message);

@@ -2,11 +2,12 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getJourneys } from "@/lib/data/journeys";
 import { deleteJourney } from "./actions";
+import StatusBadge from "@/components/StatusBadge";
 
 export const metadata: Metadata = { title: "Admin · Parcours", robots: { index: false, follow: false } };
 
 export default async function AdminJourneysPage() {
-  const journeys = await getJourneys();
+  const journeys = await getJourneys({ includeDrafts: true });
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -23,7 +24,10 @@ export default async function AdminJourneysPage() {
         {journeys.map((j) => (
           <li key={j.slug} className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="font-display text-lg">{j.title}</p>
+              <div className="flex items-center gap-2">
+                <p className="font-display text-lg">{j.title}</p>
+                <StatusBadge status={j.status} />
+              </div>
               <p className="text-xs text-paper/40">{j.duration} · /{j.slug}</p>
             </div>
             <div className="flex items-center gap-4">

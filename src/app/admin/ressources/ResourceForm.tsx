@@ -72,6 +72,15 @@ export default function ResourceForm({
           className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold"
         />
       </Field>
+      <Field label="Statut">
+        <select name="status" defaultValue={resource?.status ?? "draft"} required className="w-full border border-white/20 bg-ink px-3 py-2 text-sm focus:border-gold">
+          <option value="draft">Brouillon</option>
+          <option value="review">En relecture</option>
+          <option value="scheduled">Programmé</option>
+          <option value="published">Publié</option>
+          <option value="archived">Archivé</option>
+        </select>
+      </Field>
       <div className="mt-2">
         <button type="submit" className="border border-gold bg-gold px-6 py-2.5 text-sm font-medium text-ink hover:bg-transparent hover:text-gold">
           {resource ? "Enregistrer" : "Créer la ressource"}

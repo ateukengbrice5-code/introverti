@@ -17,6 +17,7 @@ function themeFromForm(formData: FormData) {
     fait: String(formData.get("fait") ?? "").trim() || null,
     hypothese: String(formData.get("hypothese") ?? "").trim() || null,
     reflexion: String(formData.get("reflexion") ?? "").trim() || null,
+    status: String(formData.get("status") ?? "draft").trim(),
   };
 }
 
@@ -47,6 +48,7 @@ export async function updateTheme(slug: string, formData: FormData) {
       fait: theme.fait,
       hypothese: theme.hypothese,
       reflexion: theme.reflexion,
+      status: theme.status,
     })
     .eq("slug", slug);
   if (error) throw new Error(error.message);

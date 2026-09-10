@@ -28,6 +28,7 @@ function journeyFromForm(formData: FormData) {
     objective: String(formData.get("objective") ?? "").trim(),
     steps: parseSteps(String(formData.get("steps") ?? "")),
     resources: parseSlugList(String(formData.get("resources") ?? "")),
+    status: String(formData.get("status") ?? "draft").trim(),
   };
 }
 
@@ -57,6 +58,7 @@ export async function updateJourney(slug: string, formData: FormData) {
       objective: journey.objective,
       steps: journey.steps,
       resources: journey.resources,
+      status: journey.status,
     })
     .eq("slug", slug);
   if (error) throw new Error(error.message);

@@ -1,33 +1,8 @@
 "use server";
 
-import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
-
-const COVER_BUCKET = "article-images";
-
-/**
- * Upload l'image de couverture envoyée dans le formulaire (si présente) vers
- * Supabase Storage et renvoie son URL publique. Retourne undefined si aucun
- * fichier n'a été fourni (champ laissé vide), pour ne pas écraser l'image
- * existante lors d'une modification.
- */
-async function uploadCoverImage(formData: FormData, slug: string): Promise<string | undefined> {
-  const file = formData.get("cover_image");
-  if (!(file instanceof File) || file.size === 0) return undefined;
-
-  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-  const path = `${slug}-${randomUUID()}.${ext}`;
-
-  const { error } = await getSupabaseAdmin()
-    .storage.from(COVER_BUCKET)
-    .upload(path, file, { contentType: file.type, upsert: false });
-  if (error) throw new Error(`Échec de l'upload de l'image : ${error.message}`);
-
-  const { data } = getSupabaseAdmin().storage.from(COVER_BUCKET).getPublicUrl(path);
-  return data.publicUrl;
-}
 
 function parseBody(raw: string): string[] {
   return raw
@@ -71,11 +46,7 @@ export async function createArticle(formData: FormData) {
   const article = articleFromForm(formData);
   if (!article.slug) throw new Error("Le slug est obligatoire.");
 
-  const cover_image_url = await uploadCoverImage(formData, article.slug);
-
-  const { error } = await getSupabaseAdmin()
-    .from("articles")
-    .insert({ ...article, ...(cover_image_url ? { cover_image_url } : {}) });
+  const { error } = await getSupabaseAdmin().from("articles").insert(article);
   if (error) throw new Error(error.message);
 
   revalidateArticleSurfaces(article.slug);
@@ -84,7 +55,6 @@ export async function createArticle(formData: FormData) {
 
 export async function updateArticle(slug: string, formData: FormData) {
   const article = articleFromForm(formData);
-  const cover_image_url = await uploadCoverImage(formData, slug);
 
   const { error } = await getSupabaseAdmin()
     .from("articles")
@@ -100,7 +70,6 @@ export async function updateArticle(slug: string, formData: FormData) {
       body: article.body,
       related: article.related,
       status: article.status,
-      ...(cover_image_url ? { cover_image_url } : {}),
     })
     .eq("slug", slug);
 

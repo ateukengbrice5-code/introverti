@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Admin · Modifier le parcours", robo
 
 export default async function EditJourneyPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const journey = await getJourney(slug);
+  const journey = await getJourney(slug, { includeDrafts: true });
   if (!journey) notFound();
   const boundUpdate = updateJourney.bind(null, slug);
 

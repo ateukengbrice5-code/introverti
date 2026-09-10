@@ -2,11 +2,12 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getResources } from "@/lib/data/library";
 import { deleteResource } from "./actions";
+import StatusBadge from "@/components/StatusBadge";
 
 export const metadata: Metadata = { title: "Admin · Ressources", robots: { index: false, follow: false } };
 
 export default async function AdminResourcesPage() {
-  const resources = await getResources();
+  const resources = await getResources({ includeDrafts: true });
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -22,7 +23,10 @@ export default async function AdminResourcesPage() {
         {resources.map((r) => (
           <li key={r.slug} className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="font-display text-lg">{r.title}</p>
+              <div className="flex items-center gap-2">
+                <p className="font-display text-lg">{r.title}</p>
+                <StatusBadge status={r.status} />
+              </div>
               <p className="text-xs text-paper/40">{r.type} · /{r.slug}</p>
             </div>
             <div className="flex items-center gap-4">

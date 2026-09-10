@@ -2,11 +2,12 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getThemes } from "@/lib/data/themes";
 import { deleteTheme } from "./actions";
+import StatusBadge from "@/components/StatusBadge";
 
 export const metadata: Metadata = { title: "Admin · Thèmes", robots: { index: false, follow: false } };
 
 export default async function AdminThemesPage() {
-  const themes = await getThemes();
+  const themes = await getThemes({ includeDrafts: true });
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -23,7 +24,10 @@ export default async function AdminThemesPage() {
         {themes.map((t) => (
           <li key={t.slug} className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="font-display text-lg">{t.title}</p>
+              <div className="flex items-center gap-2">
+                <p className="font-display text-lg">{t.title}</p>
+                <StatusBadge status={t.status} />
+              </div>
               <p className="text-xs text-paper/40">/{t.slug}</p>
             </div>
             <div className="flex items-center gap-4">

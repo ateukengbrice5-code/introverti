@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Admin · Modifier le thème", robots
 
 export default async function EditThemePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const theme = await getTheme(slug);
+  const theme = await getTheme(slug, { includeDrafts: true });
   if (!theme) notFound();
   const boundUpdate = updateTheme.bind(null, slug);
 
