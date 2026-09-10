@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import { getArticle, getCategory } from "@/lib/data/articles";
 import ArticleSharing from "@/components/ArticleSharing";
@@ -48,7 +49,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         ← Réflexions
       </Link>
 
-      <p className="eyebrow mt-6">{category?.label ?? article.category}</p>
+      <Link href={`/reflexions/categorie/${article.category}`} className="eyebrow mt-6 inline-block hover:text-gold">
+        {category?.label ?? article.category}
+      </Link>
       <h1 className="mt-4 font-display text-4xl leading-tight">{article.title}</h1>
       <p className="mt-4 text-lg leading-relaxed text-paper/70">{article.subtitle}</p>
 
@@ -62,7 +65,21 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         <span>{article.reading_minutes} min de lecture</span>
       </div>
 
-      <p className="mt-8 border-l-2 border-gold/60 pl-4 text-sm italic text-paper/50">{article.cover_note}</p>
+      {article.cover_image_url && (
+        <div className="relative mt-8 aspect-[16/9] overflow-hidden rounded-2xl">
+          <Image
+            src={article.cover_image_url}
+            alt={article.cover_note || article.title}
+            fill
+            priority
+            className="object-cover"
+            sizes="(min-width: 768px) 42rem, 100vw"
+          />
+        </div>
+      )}
+      {article.cover_note && (
+        <p className="mt-3 border-l-2 border-gold/60 pl-4 text-sm italic text-paper/50">{article.cover_note}</p>
+      )}
 
       <div className="mt-10 flex flex-col gap-5 text-base leading-relaxed text-paper/85">
         {article.body.map((p, i) => (

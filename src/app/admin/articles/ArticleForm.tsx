@@ -85,7 +85,27 @@ export default function ArticleForm({
         </Field>
       </div>
 
-      <Field label="Note de couverture (description de l'image, pas de fichier en V1)">
+      <Field label="Image de couverture (jpg, png ou webp)">
+        <input
+          type="file"
+          name="cover_image"
+          accept="image/png,image/jpeg,image/webp"
+          className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm file:mr-3 file:border-0 file:bg-gold file:px-3 file:py-1.5 file:text-ink"
+        />
+        {article?.cover_image_url && (
+          // eslint-disable-next-line @next/next/no-img-element -- aperçu simple dans un formulaire, pas de <Image> nécessaire ici
+          <img
+            src={article.cover_image_url}
+            alt="Couverture actuelle"
+            className="mt-3 h-32 w-auto rounded-lg border border-white/10 object-cover"
+          />
+        )}
+        <p className="mt-2 text-xs text-paper/40">
+          Laisser vide pour {article ? "conserver l'image actuelle" : "publier sans image"}.
+        </p>
+      </Field>
+
+      <Field label="Légende de l'image (affichée sous la couverture)">
         <input name="cover_note" defaultValue={article?.cover_note} required className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold" />
       </Field>
 

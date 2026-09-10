@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Compass from "@/components/Compass";
 import Newsletter from "@/components/Newsletter";
 import { getThemes } from "@/lib/data/themes";
@@ -149,7 +150,17 @@ export default async function Home() {
         <div className="mt-10 grid gap-8 md:grid-cols-3">
           {articles.slice(0, 3).map((article) => (
             <Link key={article.slug} href={`/reflexions/${article.slug}`} className="group block">
-              <div className="aspect-[4/3] rounded-2xl bg-iron/[0.06]" aria-hidden="true" />
+              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-iron/[0.06]">
+                {article.cover_image_url && (
+                  <Image
+                    src={article.cover_image_url}
+                    alt={article.cover_note || article.title}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    sizes="(min-width: 768px) 33vw, 100vw"
+                  />
+                )}
+              </div>
               <p className="mt-4 font-mono text-[0.65rem] uppercase tracking-widest text-ink/40">
                 {article.category} · {article.reading_minutes} min
               </p>

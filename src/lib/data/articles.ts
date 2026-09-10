@@ -30,6 +30,21 @@ export async function getArticle(slug: string): Promise<Article | undefined> {
 }
 
 /**
+ * Articles d'une catégorie donnée. Les articles restent accessibles via leur
+ * URL canonique /reflexions/[slug] ; cette fonction sert uniquement les pages
+ * de navigation par catégorie (/reflexions/categorie/[slug]).
+ */
+export async function getArticlesByCategory(categorySlug: string): Promise<Article[]> {
+  const { data, error } = await getSupabase()
+    .from("articles")
+    .select("*")
+    .eq("category", categorySlug)
+    .order("published_at", { ascending: false });
+  if (error) throw error;
+  return data as Article[];
+}
+
+/**
  * Variantes admin : utilisent la clé service_role (contourne le RLS), donc
  * voient TOUS les statuts (draft, review, scheduled, published, archived).
  * Réservées aux pages sous /admin — ne jamais les utiliser sur le site public.
