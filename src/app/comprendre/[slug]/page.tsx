@@ -1,12 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getThemes, getTheme } from "@/lib/data/themes";
-
-export async function generateStaticParams() {
-  const themes = await getThemes();
-  return themes.map((t) => ({ slug: t.slug }));
-}
+import { getTheme } from "@/lib/data/themes";
 
 export async function generateMetadata({
   params,

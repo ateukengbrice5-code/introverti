@@ -4,13 +4,6 @@ import type { Metadata } from "next";
 import { getArticle, getCategory } from "@/lib/data/articles";
 import ArticleSharing from "@/components/ArticleSharing";
 
-// Rendu forcé en dynamique (voir aussi le retrait de generateStaticParams
-// ci-dessous) : le Header lit les cookies de session sur toute page, donc
-// toute tentative de pré-rendu statique de cette route plante avec le
-// digest DYNAMIC_SERVER_USAGE dès qu'un article publié après le build est
-// ouvert pour la première fois.
-export const dynamic = "force-dynamic";
-
 export async function generateMetadata({
   params,
 }: {
@@ -69,14 +62,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         <span>{article.reading_minutes} min de lecture</span>
       </div>
 
-      {article.cover_image_url && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={article.cover_image_url}
-          alt={article.cover_note}
-          className="mt-8 aspect-video w-full rounded object-cover"
-        />
-      )}
       <p className="mt-8 border-l-2 border-gold/60 pl-4 text-sm italic text-paper/50">{article.cover_note}</p>
 
       <div className="mt-10 flex flex-col gap-5 text-base leading-relaxed text-paper/85">
