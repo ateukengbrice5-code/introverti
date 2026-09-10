@@ -1,4 +1,5 @@
 import { getSupabase } from "@/lib/supabase/client";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { Theme } from "@/lib/types";
 
 type ThemeRow = {
@@ -9,6 +10,7 @@ type ThemeRow = {
   fait: string | null;
   hypothese: string | null;
   reflexion: string | null;
+  status: Theme["status"];
 };
 
 function mapTheme(row: ThemeRow): Theme {
@@ -21,6 +23,7 @@ function mapTheme(row: ThemeRow): Theme {
       row.fait && row.hypothese && row.reflexion
         ? { fait: row.fait, hypothese: row.hypothese, reflexion: row.reflexion }
         : undefined,
+    status: row.status,
   };
 }
 
@@ -32,6 +35,22 @@ export async function getThemes(): Promise<Theme[]> {
 
 export async function getTheme(slug: string): Promise<Theme | undefined> {
   const { data, error } = await getSupabase().from("themes").select("*").eq("slug", slug).maybeSingle();
+  if (error) throw error;
+  return data ? mapTheme(data as ThemeRow) : undefined;
+}
+
+/**
+ * Variantes admin : clé service_role (contourne le RLS), voient tous les
+ * statuts. Réservées aux pages sous /admin.
+ */
+export async function getThemesAdmin(): Promise<Theme[]> {
+  const { data, error } = await getSupabaseAdmin().from("themes").select("*").order("slug");
+  if (error) throw error;
+  return (data as ThemeRow[]).map(mapTheme);
+}
+
+export async function getThemeAdmin(slug: string): Promise<Theme | undefined> {
+  const { data, error } = await getSupabaseAdmin().from("themes").select("*").eq("slug", slug).maybeSingle();
   if (error) throw error;
   return data ? mapTheme(data as ThemeRow) : undefined;
 }

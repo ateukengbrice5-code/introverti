@@ -1,13 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getThemes } from "@/lib/data/themes";
+import { getThemesAdmin } from "@/lib/data/themes";
 import { deleteTheme } from "./actions";
 import StatusBadge from "@/components/StatusBadge";
 
 export const metadata: Metadata = { title: "Admin · Thèmes", robots: { index: false, follow: false } };
 
 export default async function AdminThemesPage() {
-  const themes = await getThemes({ includeDrafts: true });
+  const themes = await getThemesAdmin();
   return (
     <div>
       <div className="flex items-center justify-between">

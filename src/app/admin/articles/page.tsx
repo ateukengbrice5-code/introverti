@@ -1,13 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getArticles } from "@/lib/data/articles";
+import { getArticlesAdmin } from "@/lib/data/articles";
 import { deleteArticle } from "./actions";
 import StatusBadge from "@/components/StatusBadge";
 
 export const metadata: Metadata = { title: "Admin · Articles", robots: { index: false, follow: false } };
 
 export default async function AdminArticlesPage() {
-  const articles = await getArticles({ includeDrafts: true });
+  const articles = await getArticlesAdmin();
 
   return (
     <div>

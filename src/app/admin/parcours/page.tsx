@@ -1,13 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getJourneys } from "@/lib/data/journeys";
+import { getJourneysAdmin } from "@/lib/data/journeys";
 import { deleteJourney } from "./actions";
 import StatusBadge from "@/components/StatusBadge";
 
 export const metadata: Metadata = { title: "Admin · Parcours", robots: { index: false, follow: false } };
 
 export default async function AdminJourneysPage() {
-  const journeys = await getJourneys({ includeDrafts: true });
+  const journeys = await getJourneysAdmin();
   return (
     <div>
       <div className="flex items-center justify-between">

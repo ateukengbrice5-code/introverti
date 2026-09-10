@@ -1,13 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getResources } from "@/lib/data/library";
+import { getResourcesAdmin } from "@/lib/data/library";
 import { deleteResource } from "./actions";
 import StatusBadge from "@/components/StatusBadge";
 
 export const metadata: Metadata = { title: "Admin · Ressources", robots: { index: false, follow: false } };
 
 export default async function AdminResourcesPage() {
-  const resources = await getResources({ includeDrafts: true });
+  const resources = await getResourcesAdmin();
   return (
     <div>
       <div className="flex items-center justify-between">

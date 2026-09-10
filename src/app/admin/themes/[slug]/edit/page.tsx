@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getTheme } from "@/lib/data/themes";
+import { getThemeAdmin } from "@/lib/data/themes";
 import ThemeForm from "../../ThemeForm";
 import { updateTheme, deleteTheme } from "../../actions";
 
@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Admin · Modifier le thème", robots
 
 export default async function EditThemePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const theme = await getTheme(slug, { includeDrafts: true });
+  const theme = await getThemeAdmin(slug);
   if (!theme) notFound();
   const boundUpdate = updateTheme.bind(null, slug);
 

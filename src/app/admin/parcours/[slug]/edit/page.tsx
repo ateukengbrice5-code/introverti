@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getJourney } from "@/lib/data/journeys";
+import { getJourneyAdmin } from "@/lib/data/journeys";
 import JourneyForm from "../../JourneyForm";
 import { updateJourney, deleteJourney } from "../../actions";
 
@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Admin · Modifier le parcours", robo
 
 export default async function EditJourneyPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const journey = await getJourney(slug, { includeDrafts: true });
+  const journey = await getJourneyAdmin(slug);
   if (!journey) notFound();
   const boundUpdate = updateJourney.bind(null, slug);
 

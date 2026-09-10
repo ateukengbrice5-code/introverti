@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getResources } from "@/lib/data/library";
+import { getResourceAdmin } from "@/lib/data/library";
 import ResourceForm from "../../ResourceForm";
 import { updateResource, deleteResource } from "../../actions";
 
@@ -9,8 +9,7 @@ export const metadata: Metadata = { title: "Admin · Modifier la ressource", rob
 
 export default async function EditResourcePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const resources = await getResources({ includeDrafts: true });
-  const resource = resources.find((r) => r.slug === slug);
+  const resource = await getResourceAdmin(slug);
   if (!resource) notFound();
   const boundUpdate = updateResource.bind(null, slug);
 

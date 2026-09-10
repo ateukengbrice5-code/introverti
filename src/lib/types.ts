@@ -31,7 +31,9 @@ export interface Category {
   description: string;
 }
 
-export type ArticleStatus = "draft" | "review" | "scheduled" | "published" | "archived";
+export type ContentStatus = "draft" | "review" | "scheduled" | "published" | "archived";
+/** @deprecated utiliser ContentStatus — conservé pour compatibilité */
+export type ArticleStatus = ContentStatus;
 
 export interface Article {
   slug: string;
@@ -56,6 +58,7 @@ export interface Theme {
   standfirst: string;
   body: string[];
   distinctions?: { fait: string; hypothese: string; reflexion: string };
+  status: ContentStatus;
 }
 
 /** Un des 7 axes d'introspection (section 8). */
@@ -107,6 +110,7 @@ export interface Journey {
   objective: string;
   steps: JourneyStep[];
   resources: string[]; // slugs
+  status: ContentStatus;
 }
 
 export interface UserProgress {
@@ -123,6 +127,7 @@ export interface Resource {
   description: string;
   format_note: string;
   video_url: string | null;
+  status: ContentStatus;
 }
 
 export interface Product {
