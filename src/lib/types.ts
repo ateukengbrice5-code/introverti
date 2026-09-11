@@ -59,6 +59,7 @@ export interface Theme {
   body: string[];
   distinctions?: { fait: string; hypothese: string; reflexion: string };
   status: ContentStatus;
+  cover_image_url?: string;
 }
 
 /** Un des 7 axes d'introspection (section 8). */

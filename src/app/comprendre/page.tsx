@@ -24,13 +24,23 @@ export default async function ComprendrePage() {
             <Link
               key={theme.slug}
               href={`/comprendre/${theme.slug}`}
-              className="group bg-ink px-6 py-8 transition-colors hover:bg-iron/60"
+              className="group flex flex-col bg-ink transition-colors hover:bg-iron/60"
             >
-              <p className="font-display text-xl">{theme.title}</p>
-              <p className="mt-3 text-sm leading-relaxed text-paper/60">{theme.standfirst}</p>
-              <span className="mt-5 inline-block text-xs text-gold opacity-0 transition-opacity group-hover:opacity-100">
-                Lire →
-              </span>
+              {theme.cover_image_url && (
+                // eslint-disable-next-line @next/next/no-img-element -- grille simple, pas de dimensions fixes connues à l'avance
+                <img
+                  src={theme.cover_image_url}
+                  alt=""
+                  className="h-40 w-full object-cover"
+                />
+              )}
+              <div className="px-6 py-8">
+                <p className="font-display text-xl">{theme.title}</p>
+                <p className="mt-3 text-sm leading-relaxed text-paper/60">{theme.standfirst}</p>
+                <span className="mt-5 inline-block text-xs text-gold opacity-0 transition-opacity group-hover:opacity-100">
+                  Lire →
+                </span>
+              </div>
             </Link>
           ))}
         </div>

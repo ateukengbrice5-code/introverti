@@ -11,6 +11,7 @@ type ThemeRow = {
   hypothese: string | null;
   reflexion: string | null;
   status: Theme["status"];
+  cover_image_url: string | null;
 };
 
 function mapTheme(row: ThemeRow): Theme {
@@ -24,6 +25,7 @@ function mapTheme(row: ThemeRow): Theme {
         ? { fait: row.fait, hypothese: row.hypothese, reflexion: row.reflexion }
         : undefined,
     status: row.status,
+    cover_image_url: row.cover_image_url ?? undefined,
   };
 }
 

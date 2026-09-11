@@ -56,6 +56,25 @@ export default function ThemeForm({
       <Field label="Corps — un paragraphe par bloc, séparés par une ligne vide">
         <textarea name="body" defaultValue={theme?.body.join("\n\n")} required rows={8} className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm leading-relaxed focus:border-gold" />
       </Field>
+      <Field label="Image de couverture (jpg, png ou webp)">
+        <input
+          type="file"
+          name="cover_image"
+          accept="image/png,image/jpeg,image/webp"
+          className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm file:mr-3 file:border-0 file:bg-gold file:px-3 file:py-1.5 file:text-ink"
+        />
+        {theme?.cover_image_url && (
+          // eslint-disable-next-line @next/next/no-img-element -- aperçu simple dans un formulaire, pas de <Image> nécessaire ici
+          <img
+            src={theme.cover_image_url}
+            alt="Couverture actuelle"
+            className="mt-3 h-32 w-auto rounded-lg border border-white/10 object-cover"
+          />
+        )}
+        <p className="mt-2 text-xs text-paper/40">
+          Laisser vide pour {theme ? "conserver l'image actuelle" : "publier sans image"}.
+        </p>
+      </Field>
       <p className="text-xs text-paper/40">Optionnel — distinction fait / hypothèse / réflexion éditoriale :</p>
       <Field label="Fait établi">
         <input name="fait" defaultValue={theme?.distinctions?.fait} className="w-full border border-white/20 bg-transparent px-3 py-2 text-sm focus:border-gold" />

@@ -28,6 +28,15 @@ export default async function ThemePage({ params }: { params: Promise<{ slug: st
       <h1 className="mt-4 font-display text-4xl leading-tight">{theme.title}</h1>
       <p className="mt-5 text-lg leading-relaxed text-paper/70">{theme.standfirst}</p>
 
+      {theme.cover_image_url && (
+        // eslint-disable-next-line @next/next/no-img-element -- image de couverture éditoriale, dimensions variables
+        <img
+          src={theme.cover_image_url}
+          alt=""
+          className="mt-8 h-64 w-full rounded-lg object-cover sm:h-80"
+        />
+      )}
+
       <div className="mt-10 flex flex-col gap-5 text-base leading-relaxed text-paper/80">
         {theme.body.map((p, i) => (
           <p key={i}>{p}</p>
