@@ -8,9 +8,9 @@ import { getArticles } from "@/lib/data/articles";
 
 export default async function Home() {
   const [themes, axes, articles] = await Promise.all([getThemes(), getAxes(), getArticles()]);
-  const previewThemes = themes.filter((t) =>
-    ["introversion", "timidite", "confiance", "leadership"].includes(t.slug)
-  );
+  const publishedThemes = themes.filter((t) => t.status === "published");
+  const previewThemes = publishedThemes.slice(0, 4);
+  const otherThemes = publishedThemes.slice(4);
 
   return (
     <div className="bg-paper text-ink">
@@ -74,20 +74,51 @@ export default async function Home() {
         </div>
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {previewThemes.map((theme) => (
+          {previewThemes.map((theme, i) => (
             <Link
               key={theme.slug}
               href={`/comprendre/${theme.slug}`}
-              className="group rounded-2xl bg-white p-6 shadow-sm ring-1 ring-ink/5 transition-shadow hover:shadow-md"
+              className="group overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-ink/5 transition-shadow hover:shadow-md"
             >
-              <p className="font-display text-lg">{theme.title}</p>
-              <p className="mt-3 text-sm leading-relaxed text-ink/55">{theme.standfirst}</p>
-              <span className="mt-5 inline-block text-xs text-gold opacity-0 transition-opacity group-hover:opacity-100">
-                Lire →
-              </span>
+              {theme.cover_image_url ? (
+                // eslint-disable-next-line @next/next/no-img-element -- vignette d'aperçu, dimensions variables
+                <img
+                  src={theme.cover_image_url}
+                  alt=""
+                  className="h-32 w-full object-cover"
+                />
+              ) : (
+                <div className="flex h-32 w-full items-center justify-center bg-ink">
+                  <span className="font-mono text-2xl text-gold">{String(i + 1).padStart(2, "0")}</span>
+                </div>
+              )}
+              <div className="p-6">
+                <p className="font-display text-lg">{theme.title}</p>
+                <p className="mt-3 text-sm leading-relaxed text-ink/55">{theme.standfirst}</p>
+                <span className="mt-5 inline-block text-xs text-gold opacity-0 transition-opacity group-hover:opacity-100">
+                  Lire →
+                </span>
+              </div>
             </Link>
           ))}
         </div>
+
+        {otherThemes.length > 0 && (
+          <div className="mt-8 flex flex-wrap items-center gap-3 border-t border-ink/10 pt-8">
+            <span className="font-mono text-xs uppercase tracking-[0.15em] text-ink/40">
+              Aussi traité :
+            </span>
+            {otherThemes.map((theme) => (
+              <Link
+                key={theme.slug}
+                href={`/comprendre/${theme.slug}`}
+                className="rounded-full border border-ink/15 px-4 py-1.5 text-xs text-ink/60 transition-colors hover:border-gold hover:text-gold"
+              >
+                {theme.title}
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* SE DÉCOUVRIR */}
